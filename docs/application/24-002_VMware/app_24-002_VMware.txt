@@ -1,0 +1,59 @@
+1. Application/Proposal Title
+Proposal for Update of VMware vSphere for 2025 to 2028
+
+2. Applicant Information
+- Name: Katsuo Ikura
+- Department: IT Department Section III
+- Date: January 13, 2025
+
+3. Executive Summary
+This proposal outlines the plan to renew and update our VMware vSphere licenses to the latest version. 
+
+4. Cost
+- Service Provider: VMware, Inc.
+- Budget: USD 120,000 (USD40,000 x 3 years)
+- Budget Account: ITD45
+- Period: August 2025 to August 2028
+
+5. Business Need/Problem Statement
+- Current Pain Points:
+  - Existing VMware licenses are nearing expiration.
+  - Potential security vulnerabilities due to outdated software versions.
+  - Lack of access to new features and improvements in the latest vSphere versions.
+
+6. Objectives & Scope
+- Objectives:
+  - Renew VMware licenses to ensure uninterrupted virtualization services.
+  - Upgrade to the latest vSphere version to enhance performance and security.
+  - Align with VMware's new subscription-based licensing model.
+- Scope:
+  - Included: All virtualized servers in the IT Department.
+  - Excluded: Physical servers and other departments' infrastructure.
+
+7. Solution Description
+- System Overview:
+  VMware vSphere is a leading server virtualization platform that provides a robust foundation for cloud infrastructures.
+- Key Features of Latest vSphere Editions:
+  - Enhanced security features.
+  - Improved resource management and optimization.
+  - Support for modern applications and workloads.
+
+8. Expected Benefits & Impact
+- Tangible Benefits:
+  1. Continued support and updates from VMware.
+  2. Access to new features that improve system performance and efficiency.
+- Intangible Benefits:
+  1. Enhanced system security and compliance.
+  2. Improved IT staff productivity due to streamlined management tools.
+
+9. Key Performance Indicators (KPIs)
+- Successful renewal and deployment of updated VMware licenses by August 2025.
+- Zero downtime during the transition period.
+- Improved system performance metrics post-upgrade.
+
+10. Additional Notes or Appendices
+- References:
+  - VMware vSphere Product Line Comparison.
+  - Term of services
+
+Note: The budget will be finalized after selecting the appropriate vSphere edition and subscription term, considering the latest pricing and available features.

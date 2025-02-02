@@ -1,0 +1,54 @@
+
+1. Application/Proposal Title
+Proposal to Procure Adobe Illustrator Licenses for Corporate Sales Dept I
+
+2. Applicant Information
+- Name: Iwashi Sanma
+- Department: Corporate Sales Dept I
+- Date: December 24, 2024  
+
+3. Executive Summary
+This proposal outlines the plan to procure three licenses for Adobe Illustrator, a professional-grade graphic design tool. These licenses will empower the Corporate Sales Dept I to create high-quality visual content for marketing, presentations, and client engagement. The proposed implementation will support the department’s goals of enhancing brand identity and improving communication through visually appealing designs.
+
+4. Cost
+- Service Provider: Adobe Inc.
+  - Website: https://www.adobe.com  
+- Budget: JPY 2390 (Purchase at Yahoo auction)
+- Budget Account: CTS14  
+- User Licenses:  
+  - Creative Designers: 1 licenses  
+
+5. Business Need/Problem Statement
+- Current Pain Points:  
+  - Lack of access to professional design tools for creating marketing collateral.  
+  - Dependency on external resources for minor design updates, leading to delays and higher costs.  
+  - Limited ability to create custom visuals tailored to client needs.  
+- Desired Outcome:  
+  - Equip the department with the necessary tools to independently create and manage visual content.  
+
+6. Objectives & Scope
+- Objectives:  
+  - Provide the team with industry-standard graphic design software.  
+  - Enable efficient in-house creation of marketing materials and client presentations.  
+  - Reduce reliance on external agencies for design needs.  
+- Scope:  
+  - Included: Corporate Sales Dept I, all visual content creation tasks.  
+  - Excluded: Departments without a design requirement.  
+
+7. Solution Description
+- System Overview:  
+  Adobe Illustrator is a vector graphics software widely used for creating illustrations, logos, infographics, and other visual content.  
+
+8. Expected Benefits & Impact
+- Tangible Benefits:  
+  1. Cost savings from reduced outsourcing of design work.  
+  2. Faster turnaround times for marketing and client materials.  
+- Intangible Benefits:  
+  1. Enhanced creativity and flexibility in producing custom visuals.  
+  2. Improved team morale and professional growth with access to industry-standard tools.  
+
+9. Key Performance Indicators (KPIs)
+- Adoption Rate: 100% of licenses actively used within the first month of implementation.  
+
+10. Additional Notes or Appendices
+Pricing in yahoo auction  
