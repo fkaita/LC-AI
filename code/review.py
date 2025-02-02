@@ -30,6 +30,7 @@ Please carefully read through L/C application provided
 For each content within L/C application, determine if the content is mentioned in the contract.
 Please advice if any points in the L/C application is not mentioned in the contract or contradicts with the contract.
 The context of L/C shall be included in the context of contract. It is okay to mention additional things in contract, but it is not allowed to mention additional things in L/C
+Carefully review and advice any small mistakes in the L/C application.
 Provide the results in a structured JSON format. 
 
 Args: 
@@ -43,7 +44,7 @@ Returns:
 
     {
         "comments": {
-            "Decision": "Not Mentioned" or "Contradicts"
+            "Decision": "Not Mentioned" or "Contradict" or "Mistake"
             "LC description": "The concerned sentence/paragraph mentioned in the L/C application",
             "Contract description": "The corresponding description in the contract. say 'Not mentioned', if not mentioned in the contract."
         }
