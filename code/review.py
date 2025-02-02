@@ -19,32 +19,33 @@ from llm import (
 )
 
 it_reviewer_system_prompt = (
-    "You are an AI reviewer in the IT department responsible for evaluating internal applications from employees. "
-    "Your mission is to assess risks and merits related to IT tools and the infrastructure of the company. "
-    "Be critical and cautious in your decision-making process. Your evaluations should be structured, concise, and actionable."
+    "You are an AI reviewer in the international trading company responsible for evaluating Letter of Credit (L/C) applications. "
+    "Your mission is to assess if all contents described in L/C application are align with the contract. "
+    "Be critical and cautious in your decision-making process. Your evaluations should be structured, concise, and accurate."
 )
 
 review_prompt= """
 Follow these steps to evaluate the application:
-Please carefully read through review criteria provided by the department
-For each criterion, determine if it is Pass or Reject based on the provided details.
-For each criterion, provide reason for the decision.
-Provide the results in a structured JSON format.
+Please carefully read through L/C application provided
+For each content within L/C application, determine if the content is mentioned in the contract.
+Please advice if any points in the L/C application is not mentioned in the contract or contradicts with the contract.
+The context of L/C shall be included in the context of contract. It is okay to mention additional things in contract, but it is not allowed to mention additional things in L/C
+Provide the results in a structured JSON format. 
 
 Args: 
-    application_description (str): A description of the application with appendix documents
+    description (str): A description of L/C application and corresponding contract
 
 Returns:
-    dict: A structured report containing Pass or Reject decision of each criteria with reasons.
+    dict: A structured report any points in L/C that is not mentioned in the contract or contradicts with contract.
 
     output format should be as below:
-    * Please remain original criteria ID and criteria name as key, "CriteriaID_CriteriaName" 
     * Please only provide JSON output as string starting from { and ending with }
 
     {
-        "CriteriaID_CriteriaName": {
-            "Decision": "Pass" or "Reject",
-            "Reason": "Clear explanation of the reason for the decision"
+        "comments": {
+            "Decision": "Not Mentioned" or "Contradicts"
+            "LC description": "The concerned sentence/paragraph mentioned in the L/C application",
+            "Contract description": "The corresponding description in the contract. say 'Not mentioned', if not mentioned in the contract."
         }
         ...
     }
@@ -53,7 +54,8 @@ Returns:
 
 
 def perform_review(
-    text,
+    application_text,
+    contract_text,
     model,
     client,
     temperature=0.75,
@@ -62,27 +64,8 @@ def perform_review(
 ):
 
     base_prompt = review_prompt
-
-    rc_prompt = "REVIEW CRITERIA OF IT DEPARTMENT:\n"
-
-    dir_path = os.path.dirname(os.path.realpath(__file__))
-    file_path = os.path.join(dir_path, "review_criteria/it_review_criteria")
-    if not os.path.exists(file_path):
-        print(f"The file at {file_path} does not exist.")
-    else:
-        try:
-            with open(file_path, "r", encoding="utf-8") as file:
-                rc_prompt = file.read()
-        except IOError as e:
-            print(f"An error occurred while reading the file: {e}")
-
-    base_prompt += rc_prompt
-
-    base_prompt += f"""
-    Here is the application you are asked to review:
-    ```
-    {text}
-    ```"""
+    base_prompt += f"L/C APPLICATION:\n{application_text}"
+    base_prompt += f"CORRESPONDING CONTRACT:\n{contract_text}"
 
     llm_review, msg_history = get_response_from_llm(
         base_prompt,
@@ -110,36 +93,35 @@ def perform_review(
     return review
 
 
+# feedback_prompt= """
+# Please provide constructive advice comment to applicants.
+# For example, how the applicant can enhance their strengths and mitigate the risks given these information.
+# Please provide brief feedback in less than 100 words.
+# """
 
-feedback_prompt= """
-Please provide constructive advice comment to applicants.
-For example, how the applicant can enhance their strengths and mitigate the risks given these information.
-Please provide brief feedback in less than 100 words.
-"""
+# def provide_feedback(
+#     application_text,
+#     review_text,
+#     model,
+#     client,
+#     temperature=0.75,
+#     msg_history=None,
+#     return_msg_history=False,
+# ):
 
-def provide_feedback(
-    application_text,
-    review_text,
-    model,
-    client,
-    temperature=0.75,
-    msg_history=None,
-    return_msg_history=False,
-):
+#     base_prompt = feedback_prompt + "\nReview Result:\n" + review_text + "\nApplication Content:\n" + application_text
 
-    base_prompt = feedback_prompt + "\nReview Result:\n" + review_text + "\nApplication Content:\n" + application_text
+#     llm_review, msg_history = get_response_from_llm(
+#         base_prompt,
+#         model=model,
+#         client=client,
+#         system_message=it_reviewer_system_prompt,
+#         print_debug=False,
+#         msg_history=msg_history,
+#         temperature=temperature,
+#     )
 
-    llm_review, msg_history = get_response_from_llm(
-        base_prompt,
-        model=model,
-        client=client,
-        system_message=it_reviewer_system_prompt,
-        print_debug=False,
-        msg_history=msg_history,
-        temperature=temperature,
-    )
-
-    return llm_review
+#     return llm_review
 
 
 def load_docs(path, num_pages=None, min_size=100):
