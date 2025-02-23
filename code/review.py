@@ -8,6 +8,7 @@ Author: SakanaAI
 
 import os
 import numpy as np
+import re
 import json
 import re
 from PyPDF2 import PdfReader
@@ -225,3 +226,116 @@ def extract_pdf_text(pdf_path, num_pages=None):
         print(f"Error with PyPDF2: {e}")
 
     return ""
+
+
+def review_lc(
+    model,
+    client,
+    lc_filepath,
+    contract_filepath
+):
+    
+    it_reviewer_system_prompt = (
+        "You are an AI reviewer in the international trading company responsible for evaluating Letter of Credit (L/C) applications. "
+        "Your mission is to assess if all contents described in L/C application are align with the contract. "
+        "Be critical and cautious in your decision-making process. Your evaluations should be structured, concise, and accurate."
+    )
+
+    # STEP 1: Split L/C
+    base_prompt = """
+    Please split following document into multiple parts by content.
+    *Please just split the original text without changing any words even if original text contains typo or mistake.
+    *Please split without overlapping
+    *Please provide output in JSON.
+
+    Args: 
+        application text (str): A texts from document 
+
+    Returns:
+        dict: A list of splitted text.
+
+        output format should be as below:
+        * Please only provide JSON output as string starting from { and ending with }
+
+        {
+            "output": ["list of splitted texts", "list of splitted texts", "list of splitted texts"...]
+            ...
+        }
+
+    """
+
+    application_text = extract_pdf_text(lc_filepath)
+    base_prompt += f"Document: {application_text}"
+
+    llm_review, _ = get_response_from_llm(
+        base_prompt,
+        model=model,
+        client=client,
+        system_message=it_reviewer_system_prompt,
+        print_debug=False,
+    )
+
+    try:
+        json_match = re.search(r"{.*}", llm_review, re.DOTALL)
+        if json_match:
+            cleaned_review = json_match.group(0)
+            review = json.loads(cleaned_review)
+        else:
+            raise ValueError("No JSON found in response")
+    except json.JSONDecodeError as e:
+        print(f"JSON decoding failed: {e}")
+        print(f"LLM response: {llm_review}")
+        review = None
+        return 
+
+    print("Step 1/3 finished")
+
+    # STEP 2: check discrepancy with contract
+    contract_text = extract_pdf_text(contract_filepath)
+    result = ""
+    for text in review["output"]:
+        base_prompt = f"""
+        Below paragraph is extracted from a L/C application. Please carefully read the content and advice if any discrepancy exists with given contract.
+        Please only provide identified discrepancy in your response.
+        If you do not find any discrepancy, just mention no discrepancy.
+
+        EXTRACTED PARAGRAPH FROM L/C APPLICATION:
+        {text}
+
+        PROVIDED CONTRACT:
+        {contract_text}
+        """
+
+        llm_review, _ = get_response_from_llm(
+            base_prompt,
+            model=model,
+            client=client,
+            system_message=it_reviewer_system_prompt,
+            print_debug=False,
+        )
+
+        result += llm_review
+
+    print("Step 2/3 finished")
+
+    # STEP 3: provide summary
+    base_prompt = f"""
+    Please summarize the discrepancy found in the the below report.
+
+    Report:
+    {result}
+    """
+
+    llm_review, _ = get_response_from_llm(
+        base_prompt,
+        model=model,
+        client=client,
+        system_message=it_reviewer_system_prompt,
+        print_debug=False,
+    )
+
+    print("Step 3/3 finished")
+
+    return llm_review
+
+        

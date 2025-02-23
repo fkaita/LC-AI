@@ -13,7 +13,10 @@ setup(
         "pymupdf",
         "PyPDF2",
         "pandas",
-        "tabulate"
+        "tabulate",
+        "fastapi",
+        "python-multipart",
+        "uvicorn"
     ],
     description="AI-powered Letter of Credit",
     author="Kaita Furukawa",
