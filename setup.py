@@ -16,7 +16,9 @@ setup(
         "tabulate",
         "fastapi",
         "python-multipart",
-        "uvicorn"
+        "uvicorn",
+        "streamlit",
+        "requests"
     ],
     description="AI-powered Letter of Credit",
     author="Kaita Furukawa",
