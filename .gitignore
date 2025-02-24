@@ -171,4 +171,4 @@ cython_debug/
 .pypircs
 
 # Uploaded file
-uploads/
+/uploads
