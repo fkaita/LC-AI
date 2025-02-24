@@ -1,5 +1,6 @@
 import os
 from fastapi import FastAPI, File, UploadFile, Form, HTTPException
+from fastapi.responses import StreamingResponse
 import shutil
 from pathlib import Path
 from pydantic import BaseModel
@@ -54,13 +55,13 @@ async def delete_file(filename: str):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error deleting file: {str(e)}")
     
-    
+
 class FilePaths(BaseModel):
     lc_filepath: str
     contract_filepath: str
 
 @app.post("/review/")
-async def process_files(paths: FilePaths):
+async def review(paths: FilePaths):
     """ Process two file paths and return the result """
     
     # Ensure both files exist before proceeding
@@ -72,8 +73,7 @@ async def process_files(paths: FilePaths):
 
     try:
         # Call the review_lc function with the provided file paths
-        result = review_lc(model, client, paths.lc_filepath, paths.contract_filepath)
-        return {"result": result}
+        return StreamingResponse(review_lc(model, client, paths.lc_filepath, paths.contract_filepath))
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error processing files: {str(e)}")
 

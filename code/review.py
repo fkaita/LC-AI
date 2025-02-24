@@ -228,7 +228,7 @@ def extract_pdf_text(pdf_path, num_pages=None):
     return ""
 
 
-def review_lc(
+async def review_lc(
     model,
     client,
     lc_filepath,
@@ -263,6 +263,7 @@ def review_lc(
         }
 
     """
+    yield "progress-message: Analyzing L/C draft...\n"
 
     application_text = extract_pdf_text(lc_filepath)
     base_prompt += f"Document: {application_text}"
@@ -288,9 +289,10 @@ def review_lc(
         review = None
         return 
 
-    print("Step 1/3 finished")
+    print("1/3 finished")
 
     # STEP 2: check discrepancy with contract
+    yield "progress-message: Checking L/C draft with contract...\n"
     contract_text = extract_pdf_text(contract_filepath)
     result = ""
     for text in review["output"]:
@@ -316,9 +318,10 @@ def review_lc(
 
         result += llm_review
 
-    print("Step 2/3 finished")
+    print("2/3 finished")
 
     # STEP 3: provide summary
+    yield "progress-message: Making summary...\n"
     base_prompt = f"""
     Please summarize the discrepancy found in the the below report.
 
@@ -334,8 +337,9 @@ def review_lc(
         print_debug=False,
     )
 
-    print("Step 3/3 finished")
+    print("3/3 finished")
+    yield "progress-message: Finished!\n"
 
-    return llm_review
+    yield "final-message: " + llm_review
 
         

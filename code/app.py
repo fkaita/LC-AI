@@ -9,7 +9,7 @@ API_BASE_URL = "http://127.0.0.1:8000"
 UPLOAD_DIR = "uploads"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
-st.title("📂 AI L/C Reviewer")
+st.title("🤖 AI L/C Reviewer")
 
 # File Upload Section
 st.subheader("Upload a File")
@@ -51,12 +51,45 @@ if len(st.session_state.selected_files) == 2:
             "lc_filepath": os.path.join(UPLOAD_DIR, st.session_state.selected_files[0]),
             "contract_filepath": os.path.join(UPLOAD_DIR, st.session_state.selected_files[1])
         }
-        response = requests.post(f"{API_BASE_URL}/review/", json=data)
+        response = requests.post(f"{API_BASE_URL}/review/", json=data,  stream=True)
 
-        if response.status_code == 200:
-            st.success(f"Processing Result: {response.json()['result']}")
-        else:
-            st.error(f"Error: {response.json()['detail']}")
+        progress_bar = st.progress(0)
+        step_count = 4  # Number of processing steps
+
+        final_response = []
+        capture_final_message = False 
+
+        for i, content in enumerate(response.iter_lines()):
+            if content:
+                content = content.decode("utf-8")
+                print(content)
+                if "progress-message: " in content:
+                    content = content.replace("progress-message: ", "")
+                    # Update progress bar
+                    progress_bar.progress((i + 1) / step_count, text=content)
+
+                # Capture final response
+                if "final-message: " in content:
+                    content = content.replace("final-message: ", "")
+                    capture_final_message = True
+                
+                # If inside final message, accumulate lines
+                if capture_final_message:
+                    final_response.append(content)
+                 
+
+        st.success("🎉 Processing complete!")
+        full_final_message = "\n".join(final_response)
+
+        if full_final_message:
+            st.subheader("📄 AI Review Result")
+            st.markdown(full_final_message, unsafe_allow_html=True)
+
+
+        # if response.status_code == 200:
+        #     st.success(f"Processing Result: {response.json()['result']}")
+        # else:
+        #     st.error(f"Error: {response.json()['detail']}")
 
 else:
     st.warning("No files uploaded yet.")
